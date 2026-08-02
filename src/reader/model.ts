@@ -2,11 +2,14 @@ import { createElement, type ReactNode } from "react";
 import type { Book } from "./types";
 import { mockReaderBook } from "./mock";
 
+type PendingPagePlacement = "end" | "start" | null;
+
 export class Reader {
   private columnCount: number = 1;
   private currentChunkIndex: number = 0;
   private currentPageIndex: number = 0;
   private pageCount: number = 1;
+  private pendingPagePlacement: PendingPagePlacement = null;
   private visibleColumns: number = 1;
   private readonly book: Book;
   private readonly totalExtent: number;
@@ -77,7 +80,19 @@ export class Reader {
       Math.ceil((textWidth + columnGap) / (columnWidth + columnGap)),
     );
     this.pageCount = Math.max(1, Math.ceil(this.columnCount / visibleColumns));
-    this.currentPageIndex = Math.min(this.currentPageIndex, this.pageCount - 1);
+
+    if (this.pendingPagePlacement === "end") {
+      this.currentPageIndex = this.pageCount - 1;
+    } else if (this.pendingPagePlacement === "start") {
+      this.currentPageIndex = 0;
+    } else {
+      this.currentPageIndex = Math.min(
+        this.currentPageIndex,
+        this.pageCount - 1,
+      );
+    }
+
+    this.pendingPagePlacement = null;
   }
 
   nextPage() {
@@ -102,6 +117,7 @@ export class Reader {
     if (this.currentChunkIndex < this.book.chunks.length - 1) {
       this.currentChunkIndex++;
       this.currentPageIndex = 0;
+      this.pendingPagePlacement = "start";
     }
   }
 
@@ -109,6 +125,7 @@ export class Reader {
     if (this.currentChunkIndex > 0) {
       this.currentChunkIndex--;
       this.currentPageIndex = 0;
+      this.pendingPagePlacement = "end";
     }
   }
 }

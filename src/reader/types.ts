@@ -8,6 +8,8 @@ export type Block = {
 export type Chunk = {
   content: Block[];
   index: number;
+  extent: number;
+  startExtent: number;
 };
 
 export type Book = {

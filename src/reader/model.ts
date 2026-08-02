@@ -30,8 +30,16 @@ export class Reader {
     return this.pageCount;
   }
 
+  get chunks() {
+    return this.book.chunks.length;
+  }
+
   get currentPage() {
     return this.currentPageIndex + 1;
+  }
+
+  get currentChunkNumber() {
+    return this.currentChunkIndex + 1;
   }
 
   setPageCountFromTextWidth(
@@ -43,27 +51,35 @@ export class Reader {
     this.currentPageIndex = Math.min(this.currentPageIndex, this.pageCount - 1);
   }
 
-  incrementPage() {
+  nextPage() {
     if (this.currentPageIndex < this.pageCount - 1) {
       this.currentPageIndex++;
+      return;
     }
+
+    this.incrementChunkIndex();
   }
 
-  decrementPage() {
+  previousPage() {
     if (this.currentPageIndex > 0) {
       this.currentPageIndex--;
+      return;
     }
+
+    this.decrementChunkIndex();
   }
 
   incrementChunkIndex() {
     if (this.currentChunkIndex < this.book.chunks.length - 1) {
       this.currentChunkIndex++;
+      this.currentPageIndex = 0;
     }
   }
 
   decrementChunkIndex() {
     if (this.currentChunkIndex > 0) {
       this.currentChunkIndex--;
+      this.currentPageIndex = 0;
     }
   }
 }

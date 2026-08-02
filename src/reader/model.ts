@@ -36,12 +36,23 @@ export class Reader {
 
   setPageCountFromTextWidth(
     textWidth: number,
-    maxColumnWidth: number,
+    pageStep: number,
     columnGap: number,
   ) {
-    const pageStep = maxColumnWidth + columnGap;
     this.pageCount = Math.max(1, Math.ceil((textWidth + columnGap) / pageStep));
     this.currentPageIndex = Math.min(this.currentPageIndex, this.pageCount - 1);
+  }
+
+  incrementPage() {
+    if (this.currentPageIndex < this.pageCount - 1) {
+      this.currentPageIndex++;
+    }
+  }
+
+  decrementPage() {
+    if (this.currentPageIndex > 0) {
+      this.currentPageIndex--;
+    }
   }
 
   incrementChunkIndex() {

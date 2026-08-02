@@ -18,17 +18,16 @@ export function PageControls({
     readerState.currentChunk === readerState.chunks;
 
   return (
-    <div className="reader-controls">
+    <div className="reader-controls reader-controls-page">
       <button type="button" disabled={isFirstPage} onClick={onPreviousPage}>
         Назад
       </button>
-      <span>
-        {readerState.currentPage} / {readerState.pages}
-      </span>
-      <span>{Math.round(readerState.progressPercent)}%</span>
       <button type="button" disabled={isLastPage} onClick={onNextPage}>
         Вперед
       </button>
+      <span className="reader-controls-progress">
+        {Math.round(readerState.progressPercent)}%
+      </span>
     </div>
   );
 }

@@ -25,6 +25,7 @@ export function PageControls({
       <span>
         {readerState.currentPage} / {readerState.pages}
       </span>
+      <span>{Math.round(readerState.progressPercent)}%</span>
       <button type="button" disabled={isLastPage} onClick={onNextPage}>
         Вперед
       </button>

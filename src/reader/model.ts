@@ -3,13 +3,20 @@ import type { Book } from "./types";
 import { mockReaderBook } from "./mock";
 
 export class Reader {
+  private columnCount: number = 1;
   private currentChunkIndex: number = 0;
   private currentPageIndex: number = 0;
   private pageCount: number = 1;
+  private visibleColumns: number = 1;
   private readonly book: Book;
+  private readonly totalExtent: number;
 
   constructor(book: Book) {
     this.book = book;
+    const lastChunk = this.book.chunks.at(-1);
+    this.totalExtent = lastChunk
+      ? lastChunk.startExtent + lastChunk.extent
+      : 0;
   }
 
   get currentChunk() {
@@ -42,12 +49,34 @@ export class Reader {
     return this.currentChunkIndex + 1;
   }
 
+  get progressPercent() {
+    if (this.totalExtent === 0) {
+      return 0;
+    }
+
+    const chunk = this.currentChunk;
+    const readColumns = Math.min(
+      this.currentPageIndex * this.visibleColumns + this.visibleColumns,
+      this.columnCount,
+    );
+    const chunkProgress = chunk.extent * (readColumns / this.columnCount);
+    const readExtent = chunk.startExtent + chunkProgress;
+
+    return Math.min(100, Math.max(0, (readExtent / this.totalExtent) * 100));
+  }
+
   setPageCountFromTextWidth(
     textWidth: number,
-    pageStep: number,
     columnGap: number,
+    columnWidth: number,
+    visibleColumns: number,
   ) {
-    this.pageCount = Math.max(1, Math.ceil((textWidth + columnGap) / pageStep));
+    this.visibleColumns = visibleColumns;
+    this.columnCount = Math.max(
+      1,
+      Math.ceil((textWidth + columnGap) / (columnWidth + columnGap)),
+    );
+    this.pageCount = Math.max(1, Math.ceil(this.columnCount / visibleColumns));
     this.currentPageIndex = Math.min(this.currentPageIndex, this.pageCount - 1);
   }
 

@@ -16,6 +16,7 @@ const getReaderState = (): ReaderState => ({
   currentChunk: mockReader.currentChunkNumber,
   currentPage: mockReader.currentPage,
   pages: mockReader.pages,
+  progressPercent: mockReader.progressPercent,
 });
 
 function App() {
@@ -59,8 +60,9 @@ function App() {
 
     mockReader.setPageCountFromTextWidth(
       contentElement.scrollWidth,
-      readerLayout.pageStep,
       COLUMN_GAP,
+      readerLayout.columnWidth,
+      readerLayout.visibleColumns,
     );
     setReaderState(getReaderState());
   }, [readerLayout, readerState.currentChunk]);

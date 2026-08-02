@@ -21,6 +21,7 @@ export const getReaderLayout = (frameWidth: number) => {
     columnWidth,
     contentWidth,
     pageStep,
+    visibleColumns,
   };
 };
 

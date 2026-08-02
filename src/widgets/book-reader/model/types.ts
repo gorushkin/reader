@@ -3,4 +3,5 @@ export type ReaderState = {
   currentChunk: number;
   currentPage: number;
   pages: number;
+  progressPercent: number;
 };

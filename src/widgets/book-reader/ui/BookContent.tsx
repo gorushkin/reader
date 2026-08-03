@@ -1,4 +1,5 @@
-import type { ReactNode, RefObject } from "react";
+import type { RefObject } from "react";
+import type { Block } from "../../../reader";
 import {
   COLUMN_GAP,
   CONTENT_HEIGHT,
@@ -8,11 +9,19 @@ import {
 } from "../model/layout";
 
 type BookContentProps = {
-  content: ReactNode;
+  content: Block[];
   contentOffset: number;
   contentRef: RefObject<HTMLDivElement | null>;
   frameRef: RefObject<HTMLDivElement | null>;
   readerLayout: ReaderLayout;
+};
+
+const renderBlock = (block: Block, index: number) => {
+  if (block.type === "title") {
+    return <h2 key={index}>{block.content}</h2>;
+  }
+
+  return <p key={index}>{block.content}</p>;
 };
 
 export function BookContent({
@@ -49,7 +58,7 @@ export function BookContent({
             left: contentOffset,
           }}
         >
-          {content}
+          {content.map(renderBlock)}
         </div>
       </div>
     </div>

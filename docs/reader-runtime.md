@@ -49,6 +49,7 @@ Reader не отвечает за:
 - `localStorage`;
 - серверную синхронизацию;
 - React state;
+- React rendering;
 - DOM-измерение;
 - способ получения книги.
 
@@ -220,5 +221,5 @@ pageIndex =
 - `src/reader/progressSync.ts` - local progress sync service.
 - `src/reader/types.ts` - модель книги.
 - `src/reader/mock.ts` - моковая книга.
-- `src/widgets/book-reader/*` - UI виджета чтения.
+- `src/widgets/book-reader/*` - UI виджета чтения и рендер блоков книги.
 - `src/App.tsx` - интеграционный слой React.

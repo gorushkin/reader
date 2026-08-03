@@ -92,7 +92,7 @@ function App() {
   return (
     <main className="app">
       <BookContent
-        content={mockReader.currentMarkup}
+        content={mockReader.currentChunk.content}
         contentOffset={contentOffset}
         contentRef={contentRef}
         frameRef={frameRef}

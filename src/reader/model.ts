@@ -1,4 +1,3 @@
-import { createElement, type ReactNode } from "react";
 import type { Book } from "./types";
 import { mockReaderBook } from "./mock";
 import type { ReadingProgress, ReadingProgressChange } from "./progressSync";
@@ -32,16 +31,6 @@ export class Reader {
 
   get currentChunk() {
     return this.book.chunks[this.currentChunkIndex];
-  }
-
-  get currentMarkup(): ReactNode[] {
-    return this.currentChunk.content.map((block, index) => {
-      if (block.type === "title") {
-        return createElement("h2", { key: index }, block.content);
-      }
-
-      return createElement("p", { key: index }, block.content);
-    });
   }
 
   get pages() {

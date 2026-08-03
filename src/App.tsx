@@ -44,6 +44,7 @@ function App() {
   const [readerLayout, setReaderLayout] = useState(() =>
     getReaderLayout(DEFAULT_FRAME_WIDTH),
   );
+  const [isReaderLayoutMeasured, setIsReaderLayoutMeasured] = useState(false);
 
   const contentOffset = -(readerState.currentPage - 1) * readerLayout.pageStep;
 
@@ -56,6 +57,7 @@ function App() {
 
     const updateLayout = () => {
       setReaderLayout(getReaderLayout(frameElement.clientWidth));
+      setIsReaderLayoutMeasured(true);
     };
 
     updateLayout();
@@ -83,7 +85,7 @@ function App() {
   useLayoutEffect(() => {
     const contentElement = contentRef.current;
 
-    if (!contentElement) {
+    if (!contentElement || !isReaderLayoutMeasured) {
       return;
     }
 
@@ -93,7 +95,7 @@ function App() {
       readerLayout.columnWidth,
       readerLayout.visibleColumns,
     );
-  }, [readerLayout, readerState.currentChunk]);
+  }, [isReaderLayoutMeasured, readerLayout, readerState.currentChunk]);
 
   return (
     <main className="app">

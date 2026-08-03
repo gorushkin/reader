@@ -83,6 +83,33 @@ export class Reader {
     };
   }
 
+  get debugInfo() {
+    return {
+      chunks: this.book.chunks.map((chunk) => ({
+        extent: chunk.extent,
+        index: chunk.index,
+        startExtent: chunk.startExtent,
+      })),
+      columnCount: this.columnCount,
+      currentChunkIndex: this.currentChunkIndex,
+      currentChunkNumber: this.currentChunkNumber,
+      currentChunkProgress: this.currentChunkProgress,
+      currentPageIndex: this.currentPageIndex,
+      currentPageNumber: this.currentPage,
+      currentChunkExtent: this.currentChunk.extent,
+      currentChunkStartExtent: this.currentChunk.startExtent,
+      isPagePlacementPending: this.isPagePlacementPending,
+      pageCount: this.pageCount,
+      pendingChunkProgress: this.pendingChunkProgress,
+      pendingPagePlacement: this.pendingPagePlacement,
+      progressPercent: this.progressPercent,
+      readingProgress: this.readingProgress,
+      totalChunks: this.chunks,
+      totalExtent: this.totalExtent,
+      visibleColumns: this.visibleColumns,
+    };
+  }
+
   setPageCountFromTextWidth(
     textWidth: number,
     columnGap: number,

@@ -10,6 +10,143 @@
   box-sizing: border-box;
 }
 
+.debug-panel {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.debug-toggle {
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-h);
+  background: var(--bg);
+  font: inherit;
+}
+
+.debug-overlay {
+  width: min(360px, calc(100vw - 32px));
+  max-height: calc(100svh - 72px);
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 16px 48px rgb(0 0 0 / 18%);
+  color: var(--text-h);
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.debug-overlay-header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.debug-overlay h2 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.debug-overlay-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.debug-overlay-actions button {
+  padding: 5px 9px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-h);
+  background: var(--bg);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.debug-overlay-actions span {
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.debug-overlay dl {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 6px 0;
+}
+
+.debug-overlay dl > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  padding: 6px 14px;
+}
+
+.debug-overlay dt,
+.debug-overlay dd {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.debug-overlay dt {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--text);
+}
+
+.debug-overlay dd {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.debug-overlay table {
+  width: calc(100% - 28px);
+  margin: 4px 14px 14px;
+  border-collapse: collapse;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.debug-overlay caption {
+  padding: 8px 0;
+  color: var(--text);
+  text-align: left;
+}
+
+.debug-overlay th,
+.debug-overlay td {
+  padding: 5px 0;
+  border-top: 1px solid var(--border);
+  text-align: right;
+}
+
+.debug-overlay th:first-child,
+.debug-overlay td:first-child {
+  text-align: left;
+}
+
+.debug-overlay th {
+  color: var(--text);
+  font-weight: 500;
+}
+
 .reader-frame {
   width: 100%;
   max-width: 100%;

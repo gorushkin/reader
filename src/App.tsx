@@ -7,6 +7,8 @@ import {
   DEFAULT_FRAME_WIDTH,
   getReaderLayout,
   PageControls,
+  ReaderDebugPanel,
+  type ReaderDebugInfo,
   type ReaderState,
 } from "./widgets/book-reader";
 import "./App.css";
@@ -23,6 +25,8 @@ const getReaderState = (): ReaderState => ({
   progressPercent: mockReader.progressPercent,
 });
 
+const getReaderDebugInfo = (): ReaderDebugInfo => mockReader.debugInfo;
+
 function App() {
   const frameRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -35,6 +39,7 @@ function App() {
 
     return getReaderState();
   });
+  const [readerDebugInfo, setReaderDebugInfo] = useState(getReaderDebugInfo);
 
   const [readerLayout, setReaderLayout] = useState(() =>
     getReaderLayout(DEFAULT_FRAME_WIDTH),
@@ -66,6 +71,7 @@ function App() {
   useLayoutEffect(() => {
     const unsubscribeReader = mockReader.onChange((change) => {
       setReaderState(getReaderState());
+      setReaderDebugInfo(getReaderDebugInfo());
       readingProgressSyncService.syncChange(change);
     });
 
@@ -91,6 +97,7 @@ function App() {
 
   return (
     <main className="app">
+      <ReaderDebugPanel readerDebugInfo={readerDebugInfo} />
       <BookContent
         content={mockReader.currentChunk.content}
         contentOffset={contentOffset}

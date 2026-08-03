@@ -449,25 +449,25 @@ ReadingPosition
 
 ## 12. Прогресс чтения
 
-На первом прототипе прогресс чтения считается приблизительно: каждый чанк имеет логический размер `extent` и начальное смещение `startExtent`, а текущая позиция внутри чанка оценивается по колонкам, которые покрывает текущий экран.
+На первом прототипе прогресс чтения считается приблизительно: каждый чанк имеет логический размер `extent` и начальное смещение `startExtent`, а текущая позиция внутри чанка оценивается по колонке, с которой начинается текущий экран.
 
-Формула показывает долю книги, прочитанную до конца текущего визуального экрана:
+Формула показывает долю книги, прочитанную до начала текущего визуального экрана:
 
 ```text
 totalExtent =
     lastChunk.startExtent + lastChunk.extent
 
-readColumns =
+currentColumnIndex =
     min(
-        currentPageIndex * visibleColumns + visibleColumns,
-        columnCount
+        currentPageIndex * visibleColumns,
+        columnCount - 1
     )
 
 chunkProgress =
-    readColumns / columnCount
+    currentColumnIndex / columnCount * 100
 
 readExtent =
-    currentChunk.startExtent + currentChunk.extent * chunkProgress
+    currentChunk.startExtent + currentChunk.extent * (chunkProgress / 100)
 
 progressPercent =
     clamp(readExtent / totalExtent * 100, 0, 100)
@@ -478,6 +478,7 @@ progressPercent =
 - `currentPageIndex` — индекс текущего навигационного шага внутри чанка, начиная с `0`;
 - `visibleColumns` — количество колонок, видимых за один шаг навигации;
 - `columnCount` — количество колонок, в которые разложился текущий чанк;
+- `chunkProgress` — прогресс внутри чанка в диапазоне `0…100`;
 - `extent` — примерный логический размер чанка;
 - `startExtent` — накопленное смещение чанка от начала книги.
 

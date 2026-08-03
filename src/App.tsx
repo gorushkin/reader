@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import { mockReader } from "./reader";
+import { LocalReadingProgressSyncService, mockReader } from "./reader";
 import {
   BookContent,
   ChunkControls,
@@ -10,6 +10,10 @@ import {
   type ReaderState,
 } from "./widgets/book-reader";
 import "./App.css";
+
+const readingProgressSyncService = new LocalReadingProgressSyncService(
+  "mock-reader-book",
+);
 
 const getReaderState = (): ReaderState => ({
   chunks: mockReader.chunks,
@@ -22,7 +26,15 @@ const getReaderState = (): ReaderState => ({
 function App() {
   const frameRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const [readerState, setReaderState] = useState(getReaderState);
+  const [readerState, setReaderState] = useState(() => {
+    const savedProgress = readingProgressSyncService.readProgress();
+
+    if (savedProgress) {
+      mockReader.restoreProgress(savedProgress);
+    }
+
+    return getReaderState();
+  });
 
   const [readerLayout, setReaderLayout] = useState(() =>
     getReaderLayout(DEFAULT_FRAME_WIDTH),
@@ -52,6 +64,19 @@ function App() {
   }, []);
 
   useLayoutEffect(() => {
+    const unsubscribeReader = mockReader.onChange(() => {
+      setReaderState(getReaderState());
+    });
+    const unsubscribeProgressSync =
+      readingProgressSyncService.attachReader(mockReader);
+
+    return () => {
+      unsubscribeReader();
+      unsubscribeProgressSync();
+    };
+  }, []);
+
+  useLayoutEffect(() => {
     const contentElement = contentRef.current;
 
     if (!contentElement) {
@@ -64,28 +89,7 @@ function App() {
       readerLayout.columnWidth,
       readerLayout.visibleColumns,
     );
-    setReaderState(getReaderState());
   }, [readerLayout, readerState.currentChunk]);
-
-  const handlePreviousPage = () => {
-    mockReader.previousPage();
-    setReaderState(getReaderState());
-  };
-
-  const handleNextPage = () => {
-    mockReader.nextPage();
-    setReaderState(getReaderState());
-  };
-
-  const handlePreviousChunk = () => {
-    mockReader.decrementChunkIndex();
-    setReaderState(getReaderState());
-  };
-
-  const handleNextChunk = () => {
-    mockReader.incrementChunkIndex();
-    setReaderState(getReaderState());
-  };
 
   return (
     <main className="app">
@@ -97,13 +101,13 @@ function App() {
         readerLayout={readerLayout}
       />
       <PageControls
-        onNextPage={handleNextPage}
-        onPreviousPage={handlePreviousPage}
+        onNextPage={mockReader.nextPage}
+        onPreviousPage={mockReader.previousPage}
         readerState={readerState}
       />
       <ChunkControls
-        onNextChunk={handleNextChunk}
-        onPreviousChunk={handlePreviousChunk}
+        onNextChunk={mockReader.incrementChunkIndex}
+        onPreviousChunk={mockReader.decrementChunkIndex}
         readerState={readerState}
       />
     </main>

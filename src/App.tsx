@@ -64,15 +64,13 @@ function App() {
   }, []);
 
   useLayoutEffect(() => {
-    const unsubscribeReader = mockReader.onChange(() => {
+    const unsubscribeReader = mockReader.onChange((change) => {
       setReaderState(getReaderState());
+      readingProgressSyncService.syncChange(change);
     });
-    const unsubscribeProgressSync =
-      readingProgressSyncService.attachReader(mockReader);
 
     return () => {
       unsubscribeReader();
-      unsubscribeProgressSync();
     };
   }, []);
 

@@ -1,10 +1,11 @@
 import { createElement, type ReactNode } from "react";
 import type { Book } from "./types";
 import { mockReaderBook } from "./mock";
-import type { ReadingProgress } from "./progressSync";
+import type { ReadingProgress, ReadingProgressChange } from "./progressSync";
 
 type PendingPagePlacement = "end" | "start" | null;
-type ReaderChangeListener = (reader: Reader) => void;
+export type ReaderChange = ReadingProgressChange;
+type ReaderChangeListener = (change: ReaderChange) => void;
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
@@ -23,10 +24,10 @@ export class Reader {
 
   constructor(book: Book) {
     this.book = book;
+
     const lastChunk = this.book.chunks.at(-1);
-    this.totalExtent = lastChunk
-      ? lastChunk.startExtent + lastChunk.extent
-      : 0;
+
+    this.totalExtent = lastChunk ? lastChunk.startExtent + lastChunk.extent : 0;
   }
 
   get currentChunk() {
@@ -211,7 +212,12 @@ export class Reader {
   }
 
   private emitChange() {
-    this.listeners.forEach((listener) => listener(this));
+    const change = {
+      isPagePlacementPending: this.isPagePlacementPending,
+      readingProgress: this.readingProgress,
+    };
+
+    this.listeners.forEach((listener) => listener(change));
   }
 }
 

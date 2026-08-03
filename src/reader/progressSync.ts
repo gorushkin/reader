@@ -3,15 +3,14 @@ export type ReadingProgress = {
   chunkProgress: number;
 };
 
-type ProgressReadableReader = {
-  isPagePlacementPending: boolean;
-  onChange: (listener: (reader: ProgressReadableReader) => void) => () => void;
-  readingProgress: ReadingProgress;
-};
-
 type StoredReadingProgress = ReadingProgress & {
   updatedAt: number;
   version: 2;
+};
+
+export type ReadingProgressChange = {
+  isPagePlacementPending: boolean;
+  readingProgress: ReadingProgress;
 };
 
 type ReadingProgressChangeCallback = (progress: ReadingProgress) => void;
@@ -48,12 +47,6 @@ export class LocalReadingProgressSyncService {
     this.storageKey = `${STORAGE_KEY_PREFIX}:${bookId}`;
   }
 
-  attachReader(reader: ProgressReadableReader) {
-    return reader.onChange((changedReader) => {
-      this.syncReaderProgress(changedReader);
-    });
-  }
-
   readProgress(): ReadingProgress | null {
     const storage = this.getStorage();
 
@@ -86,6 +79,14 @@ export class LocalReadingProgressSyncService {
     }
   }
 
+  syncChange(change: ReadingProgressChange) {
+    if (change.isPagePlacementPending) {
+      return;
+    }
+
+    this.syncProgress(change.readingProgress);
+  }
+
   syncProgress(progress: ReadingProgress) {
     if (this.isSameProgress(progress)) {
       return;
@@ -112,14 +113,6 @@ export class LocalReadingProgressSyncService {
 
     this.lastProgress = storedProgress;
     this.onProgressChange?.(storedProgress);
-  }
-
-  private syncReaderProgress(reader: ProgressReadableReader) {
-    if (reader.isPagePlacementPending) {
-      return;
-    }
-
-    this.syncProgress(reader.readingProgress);
   }
 
   private getStorage() {

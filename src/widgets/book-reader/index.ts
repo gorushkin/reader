@@ -3,4 +3,5 @@ export type { ReaderDebugInfo, ReaderState } from "./model/types";
 export { BookContent } from "./ui/BookContent";
 export { ChunkControls } from "./ui/ChunkControls";
 export { PageControls } from "./ui/PageControls";
+export { ReadingProgressSlider } from "./ui/ReadingProgressSlider";
 export { ReaderDebugPanel } from "./ui/ReaderDebugPanel";

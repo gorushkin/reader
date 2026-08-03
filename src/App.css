@@ -212,6 +212,27 @@
   color: var(--text-h);
 }
 
+.reading-progress {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 56px;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.reading-progress-slider {
+  width: 100%;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.reading-progress-value {
+  color: var(--text-h);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
 .reader-controls .reader-controls-label {
   min-width: 88px;
   text-align: right;

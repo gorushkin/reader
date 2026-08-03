@@ -8,6 +8,7 @@ import {
   getReaderLayout,
   PageControls,
   ReaderDebugPanel,
+  ReadingProgressSlider,
   type ReaderDebugInfo,
   type ReaderState,
 } from "./widgets/book-reader";
@@ -21,6 +22,7 @@ const getReaderState = (): ReaderState => ({
   chunks: mockReader.chunks,
   currentChunk: mockReader.currentChunkNumber,
   currentPage: mockReader.currentPage,
+  isBookEndReached: mockReader.isBookEndReached,
   pages: mockReader.pages,
   progressPercent: mockReader.progressPercent,
 });
@@ -106,6 +108,10 @@ function App() {
         contentRef={contentRef}
         frameRef={frameRef}
         readerLayout={readerLayout}
+      />
+      <ReadingProgressSlider
+        onProgressCommit={mockReader.seekProgressPercent}
+        progressPercent={readerState.progressPercent}
       />
       <PageControls
         onNextPage={mockReader.nextPage}

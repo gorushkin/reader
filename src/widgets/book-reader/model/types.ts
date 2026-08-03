@@ -2,6 +2,7 @@ export type ReaderState = {
   chunks: number;
   currentChunk: number;
   currentPage: number;
+  isBookEndReached: boolean;
   pages: number;
   progressPercent: number;
 };
@@ -20,9 +21,11 @@ export type ReaderDebugInfo = {
   currentPageNumber: number;
   currentChunkExtent: number;
   currentChunkStartExtent: number;
+  isBookEndReached: boolean;
   isPagePlacementPending: boolean;
   pageCount: number;
   pendingChunkProgress: number | null;
+  pendingChunkProgressSnap: "floor" | "nearest";
   pendingPagePlacement: "end" | "start" | null;
   progressPercent: number;
   readingProgress: {
